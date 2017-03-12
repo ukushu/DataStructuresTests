@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+ * May be interesting to implement some additional tests in future:
+ 
+    Note that if you're prepending a lot (as you're essentially doing in the last example) or deleting the first entry, a linked list will nearly always be significantly faster, as there is no searching or moving/copying to do. A List would require moving everything up a spot to accommodate the new item, making prepending an O(N) operation.
+    
+    So worst case, if we are adding the first (zeroth) element each time, then the blit has to move everything each time.
+
+    count is cached in both list classes. Possibly it's not linear, its constant time.
+
+    The memory footprint after the Clear is considerably different, as the List<T> keeps its size, while the LinkedList does not.
+
+    check clear and RemoveAll speed and compare 
+     */
+
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,7 +24,7 @@ namespace InterestingTestsProject
     {
         private string _testRezTemplate = "Test#{0}: {1}\r\nRange: {2}....{3}\r\nTime:{4}\r\n\r\n";
         
-        private readonly Stopwatch Sw = new Stopwatch();
+        private readonly Stopwatch _sw = new Stopwatch();
         
         private int _currentTestNumber;
 
@@ -151,18 +166,18 @@ namespace InterestingTestsProject
         #region #1 FillAndAppend
         private TimeSpan FillArr(int maxItemsCount)
         {
-            Sw.Restart();
+            _sw.Restart();
                 GenerateFilledIntArr(maxItemsCount);
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
 
         private TimeSpan AppendArray(int maxInteger)
         {
             int[] arr = new int[1];
 
-            Sw.Restart();
+            _sw.Restart();
 
                 for (int i = 0; i < maxInteger; i++)
                 {
@@ -170,29 +185,29 @@ namespace InterestingTestsProject
                     arr[i] = i;
                 }
 
-            Sw.Stop();
+            _sw.Stop();
             
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
         
         private TimeSpan AppendList(int maxInteger)
         {
-            Sw.Restart();
+            _sw.Restart();
                 GenerateIntList(maxInteger);
-            Sw.Stop();
+            _sw.Stop();
             
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
         
         private TimeSpan AppendLinkedList(int maxInteger)
         {
             LinkedList<int> lLst = new LinkedList<int>();
 
-            Sw.Restart();
+            _sw.Restart();
                 GenerateIntLinkedList(maxInteger);
-            Sw.Stop();
+            _sw.Stop();
             
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
         #endregion
 
@@ -202,32 +217,32 @@ namespace InterestingTestsProject
         {
             List<int> Lst = new List<int>();
 
-            Sw.Restart();
+            _sw.Restart();
 
             for (int i = 0; i < maxInteger; i++)
             {
                 Lst.Insert(0, i);
             }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
 
         private TimeSpan PrependLinkedList(int maxInteger)
         {
             LinkedList<int> lLst = new LinkedList<int>();
 
-            Sw.Restart();
+            _sw.Restart();
 
             for (int i = 0; i < maxInteger; i++)
             {
                 lLst.AddFirst(i);
             }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
         #endregion
 
@@ -237,7 +252,7 @@ namespace InterestingTestsProject
         {
             List<int> lst = new List<int>();
 
-            Sw.Restart();
+            _sw.Restart();
 
             for (int i = 0; i < maxInteger; i++)
             {
@@ -245,16 +260,16 @@ namespace InterestingTestsProject
                 //lst.Insert(2, 2);
             }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
 
         private TimeSpan InsertLinkedList(int maxInteger)
         {
             LinkedList<int> lLst = new LinkedList<int>();
 
-            Sw.Restart();
+            _sw.Restart();
 
             lLst.AddLast(1);
             lLst.AddLast(2);
@@ -266,9 +281,9 @@ namespace InterestingTestsProject
                 lLst.AddAfter(temp, i);
             }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
         #endregion
 
@@ -319,16 +334,16 @@ namespace InterestingTestsProject
             int count;
             int[] arr = new int[itemsCount];
             
-            Sw.Restart();
+            _sw.Restart();
             
                 for (int i = 0; i < tries; i++)
                 {
                     count = arr.Length;
                 }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
 
         private TimeSpan CountSpeedList(int itemsCount, int tries)
@@ -336,16 +351,16 @@ namespace InterestingTestsProject
             int count;
             List<int> lst = GenerateIntList(itemsCount);
 
-            Sw.Restart();
+            _sw.Restart();
 
                 for (int i = 0; i < tries; i++)
                 {
                     count = lst.Count;
                 }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
 
         private TimeSpan CountSpeedLinkedList(int itemsCount, int tries)
@@ -353,16 +368,16 @@ namespace InterestingTestsProject
             int count;
             LinkedList<int> lLst = GenerateIntLinkedList(itemsCount);
 
-            Sw.Restart();
+            _sw.Restart();
 
             for (int i = 0; i < tries; i++)
             {
                 count = lLst.Count;
             }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
 
         #endregion
@@ -373,32 +388,32 @@ namespace InterestingTestsProject
         {
             int[] arr = GenerateFilledIntArr(itemsCount);
 
-            Sw.Restart();
+            _sw.Restart();
 
                 for (int i = 0; i < tries; i++)
                 {
                     arr.Contains(i);
                 }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
 
         private TimeSpan ContainsSpeedList(int itemsCount, int tries)
         {
             List<int> lst = GenerateIntList(itemsCount);
 
-            Sw.Restart();
+            _sw.Restart();
 
                 for (int i = 0; i < tries; i++)
                 {
                     lst.Contains(i);
                 }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
 
         private TimeSpan ContainsSpeedLinkedList(int itemsCount, int tries)
@@ -406,16 +421,16 @@ namespace InterestingTestsProject
             int count;
             LinkedList<int> lLst = GenerateIntLinkedList(itemsCount);
 
-            Sw.Restart();
+            _sw.Restart();
 
                 for (int i = 0; i < tries; i++)
                 {
                     lLst.Contains(i);
                 }
 
-            Sw.Stop();
+            _sw.Stop();
 
-            return Sw.Elapsed;
+            return _sw.Elapsed;
         }
         
         #endregion
