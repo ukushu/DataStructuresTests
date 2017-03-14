@@ -27,10 +27,6 @@ Interesting to know:
 4. Single contiguous block is preferred for random access performance and memory consumption but for collections that need to change size regularly a structure such as an Array generally need to be copied to a new location whereas a linked list only needs to manage the memory for the newly inserted/deleted nodes. 
 
 
-# C#  Async Await Tests
-
-Just simple example of usage Async Await methods
-
 Tests result sample in "clean" view:
 ```
 Test#0: Array Fill
@@ -98,3 +94,7 @@ List<int>: 00:00:00.0014756
 LinkedList<int>: 00:00:00.0015360
 
 ```
+
+# C#  Async Await Tests
+
+Just simple example of usage Async Await methods
