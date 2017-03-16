@@ -22,11 +22,9 @@ namespace InterestingTestsProject
 {
     public class DataStructsTests
     {
-        private string _testRezTemplate = "Test#{0}: {1}\r\nRange: {2}....{3}\r\nTime:{4}\r\n\r\n";
-        
         private readonly Stopwatch _sw = new Stopwatch();
-        
-        private int _currentTestNumber;
+
+        private int _currentTestNumber = 1;
 
         private string _resultStr = string.Empty;
 
@@ -34,16 +32,35 @@ namespace InterestingTestsProject
 
         private GcMemTest _memTest = new GcMemTest();
 
-        private void UpdateRezStr(string testName, int rangeMax, TimeSpan elapsed)
+        private void RezNextTest(string testName)
         {
-            _resultStr += string.Format(_testRezTemplate, _currentTestNumber++, testName, 0, rangeMax, elapsed);
+            _resultStr += string.Format("\r\n**********************************************\r\n" +
+                                        "Test #{0}: {1}\r\n\r\n", _currentTestNumber++, testName);
         }
 
-        private void AddSeparatorLine()
+        private void RezRangeTime(string subtestName, int rangeMax, TimeSpan elapsed)
         {
-            _resultStr += "**********************************************\r\n\r\n";
+            if (subtestName == string.Empty)
+            {
+                _resultStr += string.Format($"Range: 0....{rangeMax}\r\nTime:{elapsed}\r\n\r\n");
+                return;
+            }
+
+            _resultStr += string.Format($"SubTest: {subtestName}\r\nRange: 0....{rangeMax}\r\nTime:{elapsed}\r\n\r\n");
         }
 
+        private void RezCalledTimesForElems(string subtestName, int callTimes, int elemsCount)
+        {
+
+            if (subtestName == string.Empty)
+            {
+                _resultStr += string.Format($"Items: {elemsCount}\r\nCalled times: {callTimes}\r\n");
+                return;
+            }
+
+            _resultStr += string.Format($"SubTest: {subtestName}\r\nItems: {elemsCount}\r\nCalled times: {callTimes}\r\n");
+        }
+        
         public DataStructsTests(int maxItemsCount = 5600)
         {
             _maxItemsCount = maxItemsCount;
@@ -51,45 +68,71 @@ namespace InterestingTestsProject
 
         public string RunTests()
         {
-            // TestSet 1: FilAndAppend
+            RunAppendTests();
+
+            RunPrependTests();
+
+            RunInsertTests();
+
+            RunMemUsageSpeedTests();
+
+            RunCountSpeedTests();
+
+            RunContainsSpeedTests();
+
+            RunForeachLoopSpeedTests();
+
+            RunForLoopSpeedTests();
+
+            RunRandomAccessSpeedTests();
+
+            return _resultStr;
+        }
+
+        public void RunAppendTests()
+        {
+            RezNextTest("Fill/Append tests");
+
             var arrFillTime = FillArr(_maxItemsCount);
-            UpdateRezStr("Array Fill", _maxItemsCount, arrFillTime);
+            RezRangeTime("Array Fill", _maxItemsCount, arrFillTime);
 
             var arrAppendTime = AppendArray(_maxItemsCount / 100);
             arrAppendTime = TimeSpan.FromMilliseconds(arrAppendTime.Milliseconds * 100);// lame hack to make it faster
-            UpdateRezStr("Array Append", _maxItemsCount, arrAppendTime);
+            RezRangeTime("Array Append", _maxItemsCount / 100, arrAppendTime);
 
             var lstAppendTime = AppendList(_maxItemsCount);
-            UpdateRezStr("List Append", _maxItemsCount, lstAppendTime);
+            RezRangeTime("List Append", _maxItemsCount, lstAppendTime);
 
             var lLstAppendTime = AppendLinkedList(_maxItemsCount);
-            UpdateRezStr("LinkedList Append", _maxItemsCount, lLstAppendTime);
+            RezRangeTime("LinkedList Append", _maxItemsCount, lLstAppendTime);
+        }
 
-            AddSeparatorLine();
+        public void RunPrependTests()
+        {
+            RezNextTest("Prepend tests");
 
-
-            // TestSet 2: Prepend
             var lstPrependTime = PrependList(_maxItemsCount / 100);
             lstPrependTime = TimeSpan.FromMilliseconds(lstPrependTime.Milliseconds * 100);// lame hack to make it faster
-            UpdateRezStr("List Prepend", _maxItemsCount, lstPrependTime);
+            RezRangeTime("List Prepend", _maxItemsCount, lstPrependTime);
 
             var lLstPrependTime = PrependLinkedList(_maxItemsCount);
-            UpdateRezStr("LinkedList Prepend", _maxItemsCount, lLstPrependTime);
+            RezRangeTime("LinkedList Prepend", _maxItemsCount, lLstPrependTime);
+        }
 
-            AddSeparatorLine();
+        public void RunInsertTests()
+        {
+            RezNextTest("Insertion tests");
 
-
-            // TestSet 3: Insertion
             var lstInsertTime = IsertList(_maxItemsCount);
-            UpdateRezStr("List Insertion", _maxItemsCount, lstInsertTime);
+            RezRangeTime("List", _maxItemsCount, lstInsertTime);
 
             var lLstInsertTime = InsertLinkedList(_maxItemsCount);
-            UpdateRezStr("LinkedList Insertion", _maxItemsCount, lLstInsertTime);
+            RezRangeTime("LinkedList", _maxItemsCount, lLstInsertTime);
+        }
 
-            AddSeparatorLine();
-
-
-            //TestSet 3: Insertion
+        public void RunMemUsageSpeedTests()
+        {
+            RezNextTest("Memory usage tests");
 
             var elemsCount = 560000;
             var memUsageArr = MemUsageArray(elemsCount);
@@ -100,7 +143,7 @@ namespace InterestingTestsProject
                           $"int[]: {memUsageArr} Kb\r\n" +
                           $"List<int>: {memUsageList} Kb\r\n" +
                           $"LinkedList<int>: {memUsageLinList} Kb\r\n";
-            
+
             elemsCount = 56000000;
             memUsageArr = MemUsageArray(elemsCount);
             memUsageList = MemUsageList(elemsCount);
@@ -110,58 +153,100 @@ namespace InterestingTestsProject
                           $"int[]: {memUsageArr} Kb\r\n" +
                           $"List<int>: {memUsageList} Kb\r\n" +
                           $"LinkedList<int>: {memUsageLinList} Kb\r\n";
-            AddSeparatorLine();
             GC.Collect();
-            
+        }
 
-            //TestSet 5: Count speed
+        public void RunCountSpeedTests()
+        {
+            RezNextTest("Count() speed tests");
+
             var countSpedArr = CountSpeedArray(_maxItemsCount, _maxItemsCount);
             var countSpedList = CountSpeedList(_maxItemsCount, _maxItemsCount);
             var countSpedLinkedList = CountSpeedLinkedList(_maxItemsCount, _maxItemsCount);
 
-            _resultStr += $"Length/Count speed called {_maxItemsCount} times for {_maxItemsCount} elements:\r\n" +
-                          $"int[]: {countSpedArr}\r\n" +
+            RezCalledTimesForElems("Length/Count speed 1", _maxItemsCount, _maxItemsCount);
+            _resultStr += $"int[]: {countSpedArr}\r\n" +
                           $"List<int>: {countSpedList}\r\n" +
                           $"LinkedList<int>: {countSpedLinkedList}\r\n\r\n";
 
-            countSpedArr = CountSpeedArray(_maxItemsCount, _maxItemsCount*1000);
+            countSpedArr = CountSpeedArray(_maxItemsCount, _maxItemsCount * 1000);
             countSpedList = CountSpeedList(_maxItemsCount, _maxItemsCount * 1000);
             countSpedLinkedList = CountSpeedLinkedList(_maxItemsCount, _maxItemsCount * 1000);
 
-            _resultStr += $"Length/Count speed called {_maxItemsCount * 1000} times for {_maxItemsCount} elements:\r\n" +
-                          $"int[]: {countSpedArr}\r\n" +
+            RezCalledTimesForElems("Length/Count speed 2", _maxItemsCount * 1000, _maxItemsCount);
+            _resultStr += $"int[]: {countSpedArr}\r\n" +
                           $"List<int>: {countSpedList}\r\n" +
                           $"LinkedList<int>: {countSpedLinkedList}\r\n";
-            
-            AddSeparatorLine();
-            
+        }
 
-            //TestSet 6: Contains speed
+        public void RunContainsSpeedTests()
+        {
+            RezNextTest("Contains() speed tests");
             int divider = 6;//too large time fix
 
-            var containsSpedArr = ContainsSpeedArray(_maxItemsCount/ divider, _maxItemsCount / divider);
+            var containsSpedArr = ContainsSpeedArray(_maxItemsCount / divider, _maxItemsCount / divider);
             var containsSpedList = ContainsSpeedList(_maxItemsCount / divider, _maxItemsCount / divider);
             var containsSpedLinkedList = ContainsSpeedLinkedList(_maxItemsCount / divider, _maxItemsCount / divider);
 
-            _resultStr += $"Contains speed called {_maxItemsCount / divider} times for {_maxItemsCount / divider} elements:\r\n" +
-                          $"int[]: {containsSpedArr}\r\n" +
+            RezCalledTimesForElems("", _maxItemsCount / divider, _maxItemsCount / divider);
+            _resultStr += $"int[]: {containsSpedArr}\r\n" +
                           $"List<int>: {containsSpedList}\r\n" +
                           $"LinkedList<int>: {containsSpedLinkedList}\r\n\r\n";
-
-            //containsSpedArr = ContainsSpeedArray(_maxItemsCount, _maxItemsCount * 1000);
-            //containsSpedList = ContainsSpeedList(_maxItemsCount, _maxItemsCount * 1000);
-            //containsSpedLinkedList = ContainsSpeedLinkedList(_maxItemsCount, _maxItemsCount * 1000);
-
-            //_resultStr += $"Length/Count speed called {_maxItemsCount * 1000} times for {_maxItemsCount} elements:\r\n" +
-            //              $"int[]: {containsSpedArr}\r\n" +
-            //              $"List<int>: {containsSpedList}\r\n" +
-            //              $"LinkedList<int>: {containsSpedLinkedList}\r\n";
-
-            AddSeparatorLine();
-
-
-            return _resultStr;
         }
+
+        public void RunForeachLoopSpeedTests()
+        {
+            RezNextTest("Foreach() loop speed tests");
+
+            var foreachSpeedArray = ForeachSpeedArray(_maxItemsCount, _maxItemsCount);
+            var foreachSpeedList = ForeachSpeedList(_maxItemsCount, _maxItemsCount);
+            var foreachSpeedLinkedList = ForeachSpeedLinkedList(_maxItemsCount, _maxItemsCount);
+
+            RezCalledTimesForElems("Foreach() speed #1", _maxItemsCount, _maxItemsCount);
+            _resultStr += $"int[]: {foreachSpeedArray}\r\n" +
+                          $"List<int>: {foreachSpeedList}\r\n" +
+                          $"LinkedList<int>: {foreachSpeedLinkedList}\r\n\r\n";
+
+            foreachSpeedArray = ForeachSpeedArray(_maxItemsCount * 10, _maxItemsCount * 10);
+            foreachSpeedList = ForeachSpeedList(_maxItemsCount * 10, _maxItemsCount * 10);
+            foreachSpeedLinkedList = ForeachSpeedLinkedList(_maxItemsCount * 10, _maxItemsCount * 10);
+
+            RezCalledTimesForElems("Foreach() speed #2", _maxItemsCount * 10, _maxItemsCount * 10);
+            _resultStr += $"int[]: {foreachSpeedArray}\r\n" +
+                          $"List<int>: {foreachSpeedList}\r\n" +
+                          $"LinkedList<int>: {foreachSpeedLinkedList}\r\n";
+        }
+
+        public void RunForLoopSpeedTests()
+        {
+            RezNextTest("For() loop speed tests");
+            var forSpeedArray = ForSpeedArray(_maxItemsCount, _maxItemsCount);
+            var forSpeedList = ForSpeedList(_maxItemsCount, _maxItemsCount);
+
+            RezCalledTimesForElems("For() speed #1", _maxItemsCount, _maxItemsCount);
+            _resultStr += $"int[]: {forSpeedArray}\r\n" +
+                          $"List<int>: {forSpeedList}\r\n\r\n";
+
+            forSpeedArray = ForSpeedArray(_maxItemsCount * 10, _maxItemsCount * 10);
+            forSpeedList = ForSpeedList(_maxItemsCount * 10, _maxItemsCount * 10);
+
+            RezCalledTimesForElems("For() speed #2", _maxItemsCount * 10, _maxItemsCount * 10);
+            _resultStr += $"int[]: {forSpeedArray}\r\n" +
+                          $"List<int>: {forSpeedList}\r\n\r\n";
+
+        }
+
+        public void RunRandomAccessSpeedTests()
+        {
+            RezNextTest("Random access speed tests");
+            var raSpeedArray = RandomAccessSpeedArray(_maxItemsCount * 10000, _maxItemsCount * 10000);
+            var raSpeedList = RandomAccessSpeedList(_maxItemsCount * 10000, _maxItemsCount * 10000);
+
+            RezCalledTimesForElems("", _maxItemsCount * 10000, _maxItemsCount * 10000);
+            _resultStr += $"int[]: {raSpeedArray}\r\n" +
+                          $"List<int>: {raSpeedList}\r\n\r\n";
+        }
+
 
         #region #1 FillAndAppend
         private TimeSpan FillArr(int maxItemsCount)
@@ -321,7 +406,6 @@ namespace InterestingTestsProject
         }
         #endregion
         
-
         #region TODO: Random access speed
 
 
@@ -432,9 +516,110 @@ namespace InterestingTestsProject
 
             return _sw.Elapsed;
         }
-        
+
         #endregion
-        
+
+        #region Foreach() Speed
+        private TimeSpan ForeachSpeedArray(int itemsCount, int tries)
+        {
+            int[] arr = GenerateFilledIntArr(itemsCount);
+
+            _sw.Restart();
+
+            for (int i = 0; i < tries; i++)
+            {
+                foreach (var i1 in arr)
+                {
+
+                }
+            }
+
+            _sw.Stop();
+
+            return _sw.Elapsed;
+        }
+
+        private TimeSpan ForeachSpeedList(int itemsCount, int tries)
+        {
+            List<int> lst = GenerateIntList(itemsCount);
+
+            _sw.Restart();
+
+            for (int i = 0; i < tries; i++)
+            {
+                foreach (var i1 in lst)
+                {
+
+                }
+            }
+
+            _sw.Stop();
+
+            return _sw.Elapsed;
+        }
+
+        private TimeSpan ForeachSpeedLinkedList(int itemsCount, int tries)
+        {
+            int count;
+            LinkedList<int> lLst = GenerateIntLinkedList(itemsCount);
+
+            _sw.Restart();
+
+            for (int i = 0; i < tries; i++)
+            {
+                foreach (var i1 in lLst)
+                {
+
+                }
+            }
+
+            _sw.Stop();
+
+            return _sw.Elapsed;
+        }
+
+        #endregion
+
+        #region For() Speed
+        private TimeSpan ForSpeedArray(int itemsCount, int tries)
+        {
+            int[] arr = GenerateFilledIntArr(itemsCount);
+
+            _sw.Restart();
+
+            for (int i = 0; i < tries; i++)
+            {
+                for (int j=0; j < arr.Length;j++)
+                {
+
+                }
+            }
+
+            _sw.Stop();
+
+            return _sw.Elapsed;
+        }
+
+        private TimeSpan ForSpeedList(int itemsCount, int tries)
+        {
+            List<int> lst = GenerateIntList(itemsCount);
+
+            _sw.Restart();
+
+            for (int i = 0; i < tries; i++)
+            {
+                for (int j = 0; j < lst.Count; j++)
+                {
+
+                }
+            }
+
+            _sw.Stop();
+
+            return _sw.Elapsed;
+        }
+        #endregion
+
         #region Generate
         private int[] GenerateFilledIntArr(int itemsCount)
         {
@@ -470,6 +655,48 @@ namespace InterestingTestsProject
             }
 
             return lLst;
+        }
+        #endregion
+
+        #region
+        private TimeSpan RandomAccessSpeedArray(int itemsCount, int tries)
+        {
+            int[] arr = GenerateFilledIntArr(itemsCount);
+            int index, tmp;
+
+            Random rnd = new Random();
+
+            _sw.Restart();
+
+            for (int i = 0; i < tries; i++)
+            {
+                index = rnd.Next(itemsCount);
+                tmp = arr[index];
+            }
+
+            _sw.Stop();
+
+            return _sw.Elapsed;
+        }
+
+        private TimeSpan RandomAccessSpeedList(int itemsCount, int tries)
+        {
+            List<int> lst = GenerateIntList(itemsCount);
+            int index, tmp;
+
+            Random rnd = new Random();
+
+            _sw.Restart();
+
+            for (int i = 0; i < tries; i++)
+            {
+                index = rnd.Next(itemsCount);
+                tmp = lst[index];
+            }
+
+            _sw.Stop();
+
+            return _sw.Elapsed;
         }
         #endregion
 
