@@ -29,7 +29,7 @@ Testing of Array, List and Linked List of usage for knowing most important thing
 
 **Detailed results:**
 
-![Alt text](https://i.stack.imgur.com/iBz6V.png "Array vs List vs Linked List"")
+![alt tag](https://i.stack.imgur.com/iBz6V.png)
 
 
 **Interesting to know:**
