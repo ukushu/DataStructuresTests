@@ -23,7 +23,7 @@ namespace InterestingTestsProject
         /// <returns>difference between test start and test finish in Kb</returns>
         public long FinishMemTest()
         {
-            return GC.GetTotalMemory(true) / 1024;
+            return GC.GetTotalMemory(true) / 1024 - _kbAtExecution;
         }
     }
 }
