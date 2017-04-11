@@ -29,13 +29,7 @@ Testing of Array, List and Linked List of usage for knowing most important thing
 
 **Detailed results:**
 
-![Alt text](http://image.prntscr.com/image/00dd0851e38f4c5a8e477c589fb1e124.png "Colors meaning")
-
-![Alt text](https://i.stack.imgur.com/WCllu.png "Array vs List vs Linked List")
-
-If you want more details from tests:
-
-![Alt text](https://i.stack.imgur.com/S2KVI.png "Array vs List vs Linked List")
+![Alt text](https://i.stack.imgur.com/iBz6V.png "Array vs List vs Linked List"")
 
 
 **Interesting to know:**
@@ -51,129 +45,125 @@ If you want more details from tests:
 Tests result sample in "clean" view:
 ```
 
-**********************************************
+****************************************
 Test #1: Fill/Append tests
 
 SubTest: Array Fill
-Range: 0....5600
-Time:00:00:00.0005582
+Range: 0....5600000
+Time:00:00:00.0113683
 
 SubTest: Array Append
-Range: 0....56
-Time:00:00:00
+Range: 0....56000
+Time:00:00:19.3669000
 
 SubTest: List Append
-Range: 0....5600
-Time:00:00:00.0003435
+Range: 0....5600000
+Time:00:00:00.0470090
 
 SubTest: LinkedList Append
-Range: 0....5600
-Time:00:00:00.0010172
+Range: 0....5600000
+Time:00:00:00.8614091
 
-
-**********************************************
+****************************************
 Test #2: Prepend tests
 
 SubTest: List Prepend
 Range: 0....5600
-Time:00:00:00
+Time:00:00:23.3610285
 
 SubTest: LinkedList Prepend
 Range: 0....5600
-Time:00:00:00.0006906
+Time:00:00:00.0114274
 
-
-**********************************************
+****************************************
 Test #3: Insertion tests
 
 SubTest: List
-Range: 0....5600
-Time:00:00:00.0077296
+Range: 0....560000
+Time:00:00:15.6868562
 
 SubTest: LinkedList
-Range: 0....5600
-Time:00:00:00.0012719
+Range: 0....560000
+Time:00:00:00.0648320
 
-
-**********************************************
+****************************************
 Test #4: Memory usage tests
 
 Memory usage for 560000 elements:
-int[]: 2286 Kb
-List<int>: 4195 Kb
-LinkedList<int>: 13224 Kb
-Memory usage for 56000000 elements:
-int[]: 218849 Kb
-List<int>: 262243 Kb
-LinkedList<int>: 1312601 Kb
+int[]: 2188 Kb (Expected: 2240~ Kb)
+List<int>: 4100 Kb
+LinkedList<int>: 26246 Kb
 
-**********************************************
+Memory usage for 56000000 elements:
+int[]: 218750 Kb (Expected: 224000~ Kb)
+List<int>: 262144 Kb
+LinkedList<int>: 2625000 Kb
+
+****************************************
 Test #5: Count() speed tests
 
 SubTest: Length/Count speed 1
-Items: 5600
-Called times: 5600
-int[]: 00:00:00.0000156
-List<int>: 00:00:00.0000163
-LinkedList<int>: 00:00:00.0000583
+Items: 56000
+Called times: 56000000
+int[]: 00:00:00.0277196
+List<int>: 00:00:00.0280081
+LinkedList<int>: 00:00:00.0419579
 
 SubTest: Length/Count speed 2
-Items: 5600
-Called times: 5600000
-int[]: 00:00:00.0166288
-List<int>: 00:00:00.0164550
-LinkedList<int>: 00:00:00.0171840
+Items: 56000
+Called times: 2147483647
+int[]: 00:00:01.0658961
+List<int>: 00:00:01.0682234
+LinkedList<int>: 00:00:01.6018209
 
-**********************************************
+****************************************
 Test #6: Contains() speed tests
 
-Items: 933
-Called times: 933
-int[]: 00:00:00.0008534
-List<int>: 00:00:00.0033693
-LinkedList<int>: 00:00:00.0014628
+Items: 56000
+Called times: 56000
+int[]: 00:00:01.5704624
+List<int>: 00:00:03.5993226
+LinkedList<int>: 00:00:12.3584247
 
-
-**********************************************
+****************************************
 Test #7: Foreach() loop speed tests
 
 SubTest: Foreach() speed #1
-Items: 5600
+Items: 56000
 Called times: 5600
-int[]: 00:00:00.0780322
-List<int>: 00:00:00.1570124
-LinkedList<int>: 00:00:00.2306882
+int[]: 00:00:00.1564547
+List<int>: 00:00:00.9241910
+LinkedList<int>: 00:00:02.1726847
 
 SubTest: Foreach() speed #2
 Items: 56000
 Called times: 56000
-int[]: 00:00:07.8914087
-List<int>: 00:00:15.4580335
-LinkedList<int>: 00:00:23.3689500
+int[]: 00:00:01.5637290
+List<int>: 00:00:09.2038910
+LinkedList<int>: 00:00:20.0895703
 
-**********************************************
+****************************************
 Test #8: For() loop speed tests
 
 SubTest: For() speed #1
-Items: 5600
+Items: 56000
 Called times: 5600
-int[]: 00:00:00.0819466
-List<int>: 00:00:00.1085861
+int[]: 00:00:00.1562709
+List<int>: 00:00:00.3886933
 
 SubTest: For() speed #2
 Items: 56000
 Called times: 56000
-int[]: 00:00:08.2735954
-List<int>: 00:00:10.7827043
+int[]: 00:00:01.5780412
+List<int>: 00:00:03.8989484
 
-
-**********************************************
+****************************************
 Test #9: Random access speed tests
 
 Items: 56000000
 Called times: 56000000
-int[]: 00:00:06.2716167
-List<int>: 00:00:06.5015990
+int[]: 00:00:04.1690581
+List<int>: 00:00:04.1938929
 
 
 ```
